@@ -32,7 +32,7 @@ export class MusicPlayer extends HTMLElement {
     const info = this.shadowRoot.querySelector("track-info");
 
     let currentIndex = 0;
-    // 🎵 Lista de canciones con sus portadas individuales
+    // Lista de canciones con sus portadas individuales
     const tracks = [
       { 
         src: "./audio/cancion1.mp3", 
@@ -54,10 +54,10 @@ export class MusicPlayer extends HTMLElement {
       }
     ];
 
-    // 🔹 Cargar la primera canción
+    // Cargar la primera canción
     this.loadTrack(tracks[currentIndex], audio, info);
 
-    // 🎵 Cuando se selecciona una canción de la lista
+    // Cuando se selecciona una canción de la lista
     this.shadowRoot.addEventListener("trackSelected", (e) => {
       const { src, titulo, artista, img } = e.detail;
       audio.src = src;
@@ -66,7 +66,7 @@ export class MusicPlayer extends HTMLElement {
       currentIndex = tracks.findIndex(t => t.src === src);
     });
 
-    // 🎮 Escucha los eventos del componente de control
+    // Escucha los eventos del componente de control
     this.shadowRoot.addEventListener("control", (e) => {
       const action = e.detail;
       if (action === "play") audio.play();
@@ -84,7 +84,7 @@ export class MusicPlayer extends HTMLElement {
     });
   }
 
-  // 🧩 Cargar la canción y actualizar la portada
+  // Cargar la canción y actualizar la portada
   loadTrack(track, audio, info) {
     audio.src = track.src;
     info.setInfo(track.titulo, track.artista, track.img);

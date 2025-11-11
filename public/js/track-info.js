@@ -23,7 +23,7 @@ export class TrackInfo extends HTMLElement {
     `;
   }
 
-  // 🔹 Actualiza la información de la canción
+  // Actualiza la información de la canción
   setInfo(titulo, artista, img) {
     this.shadowRoot.querySelector("#titulo").textContent = titulo;
     this.shadowRoot.querySelector("#artista").textContent = artista;
