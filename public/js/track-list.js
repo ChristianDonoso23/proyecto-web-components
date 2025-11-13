@@ -10,9 +10,9 @@ export class TrackList extends HTMLElement {
           justify-content: space-between;
           padding: 8px 0;
           margin-bottom: 10px;
-          color: #bbb;
+          color: #fadcd5;
           font-size: 0.9rem;
-          border-bottom: 1px solid #444;
+          border-bottom: 1px solid #4b2138;
         }
 
         .row {
@@ -21,31 +21,32 @@ export class TrackList extends HTMLElement {
           align-items: center;
           padding: 10px 0;
           cursor: pointer;
-          border-bottom: 1px solid #333;
           transition: 0.25s;
-          color: white;
         }
 
         .row:hover {
-          background: #2a2a2a;
+          background: #6d3c52;
         }
 
         .num {
           width: 30px;
           text-align: center;
           opacity: 0.7;
+          color: #fadcd5;
         }
 
         .title {
           flex: 1;
           margin-left: 10px;
           font-weight: 500;
+          color: #fadcd5;
         }
 
         .duration {
           width: 60px;
           text-align: right;
           opacity: 0.8;
+          color: #fadcd5;
         }
       </style>
 

@@ -18,7 +18,7 @@ export class PlayerControls extends HTMLElement {
         button {
           background: none;
           border: none;
-          color: white;
+          color: #fadcd5;
           font-size: 2rem;
           cursor: pointer;
           transition: 0.25s;
@@ -26,11 +26,11 @@ export class PlayerControls extends HTMLElement {
 
         button:hover {
           transform: scale(1.18);
-          color: #3cc31aff;
+          color: #6d3c52;
         }
 
         .fav.active i {
-          color: #3cc31aff;
+          color: #fadcd5;
           transform: scale(1.2);
         }
       </style>

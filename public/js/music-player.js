@@ -1,11 +1,13 @@
 import { TrackList } from "./track-list.js";
 import { TrackInfo } from "./track-info.js";
 import { PlayerControls } from "./player-control.js";
+import { PlayerProgress } from "./player-progress.js";
 
 export class MusicPlayer extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+
     this.shadowRoot.innerHTML = `
       <link rel="stylesheet" href="./public/vendor/bootstrap/css/bootstrap.min.css" />
 
@@ -14,20 +16,19 @@ export class MusicPlayer extends HTMLElement {
           display: flex;
           flex-wrap: wrap;
           gap: 50px;
-          background-color: #222;
+          background-color: #2d222f;
           padding: 50px 60px;
           border-radius: 15px;
-          box-shadow: 0 0 10px rgba(255,255,255,0.1);
-          justify-content: center;  /* CENTRA TODO */
-          align-items: flex-start;  /* Alinea arriba */
+          box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+          justify-content: center;
+          align-items: flex-start;
         }
-
 
         .left-panel {
           flex: 1;
           min-width: 250px;
           text-align: center;
-          color: white;
+          color: #fadcd5;
         }
 
         .right-panel {
@@ -36,6 +37,9 @@ export class MusicPlayer extends HTMLElement {
           max-width: 500px;
         }
 
+        h5, p {
+          color: #fadcd5;
+        }
 
         audio {
           width: 100%;
@@ -46,6 +50,7 @@ export class MusicPlayer extends HTMLElement {
       <div class="player-container">
         <div class="left-panel">
           <track-info></track-info>
+          <player-progress></player-progress>
           <player-controls></player-controls>
           <audio id="audio"></audio>
         </div>
@@ -61,6 +66,7 @@ export class MusicPlayer extends HTMLElement {
     const audio = this.shadowRoot.querySelector("#audio");
     const info = this.shadowRoot.querySelector("track-info");
     const controls = this.shadowRoot.querySelector("player-controls");
+    const progress = this.shadowRoot.querySelector("player-progress");
 
     const base = window.location.origin;
 
@@ -124,6 +130,10 @@ export class MusicPlayer extends HTMLElement {
       audio.src = track.src;
       info.setInfo(track.titulo, track.artista, track.img);
       updateFavoriteUI();
+
+      audio.onloadedmetadata = () => {
+        progress.update(0, audio.duration);
+      };
     }
 
     function updateFavoriteUI() {
@@ -160,14 +170,20 @@ export class MusicPlayer extends HTMLElement {
         const current = tracks[currentIndex].src;
         const saved = localStorage.getItem("favoriteSong");
 
-        if (saved === current) {
-          localStorage.removeItem("favoriteSong");
-        } else {
-          localStorage.setItem("favoriteSong", current);
-        }
+        if (saved === current) localStorage.removeItem("favoriteSong");
+        else localStorage.setItem("favoriteSong", current);
 
         updateFavoriteUI();
       }
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      progress.update(audio.currentTime, audio.duration);
+    });
+
+    progress.addEventListener("seek", (e) => {
+      const percent = e.detail;
+      audio.currentTime = percent * audio.duration;
     });
   }
 }
