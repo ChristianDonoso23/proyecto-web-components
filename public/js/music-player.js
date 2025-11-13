@@ -8,6 +8,7 @@ export class MusicPlayer extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = `
       <link rel="stylesheet" href="./public/vendor/bootstrap/css/bootstrap.min.css" />
+
       <style>
         .player-container {
           display: flex;
@@ -55,10 +56,10 @@ export class MusicPlayer extends HTMLElement {
   connectedCallback() {
     const audio = this.shadowRoot.querySelector("#audio");
     const info = this.shadowRoot.querySelector("track-info");
+    const controls = this.shadowRoot.querySelector("player-controls");
 
     const base = window.location.origin;
 
-    // Lista única de canciones (mismas rutas que en track-list.js)
     const tracks = [
       {
         src: `${base}/public/audio/MILO J - CARENCIAS DE CORDURA ft. Yami Safdie.mp3`,
@@ -82,54 +83,64 @@ export class MusicPlayer extends HTMLElement {
 
     let currentIndex = 0;
 
-    // 🔹 Si hay favorita en localStorage, la mostramos primero
-    const favoriteSrc = localStorage.getItem("favoriteSong");
-    if (favoriteSrc) {
-      const favTrack = tracks.find((t) => t.src === favoriteSrc);
-      if (favTrack) {
-        currentIndex = tracks.indexOf(favTrack);
-      }
+    const favSrc = localStorage.getItem("favoriteSong");
+    if (favSrc) {
+      const favTrack = tracks.find(t => t.src === favSrc);
+      if (favTrack) currentIndex = tracks.indexOf(favTrack);
     }
 
-    // Cargar pista inicial (favorita o primera)
-    this.loadTrack(tracks[currentIndex], audio, info);
+    loadCurrentTrack();
 
-    // 🔹 Al seleccionar desde la lista
+    function loadCurrentTrack() {
+      const track = tracks[currentIndex];
+      audio.src = track.src;
+      info.setInfo(track.titulo, track.artista, track.img);
+      updateFavoriteUI();
+    }
+
+    function updateFavoriteUI() {
+      const fav = localStorage.getItem("favoriteSong");
+      controls.setFavoriteState(fav === tracks[currentIndex].src);
+    }
+
     this.shadowRoot.addEventListener("trackSelected", (e) => {
-      const track = tracks.find((t) => t.src === e.detail.src) || e.detail;
-
-      this.loadTrack(track, audio, info);
-      audio.play();
+      const track = tracks.find((t) => t.src === e.detail.src);
       currentIndex = tracks.indexOf(track);
+      loadCurrentTrack();
+      audio.play();
     });
 
-    // 🔹 Controles básicos (play / pause / next / prev)
     this.shadowRoot.addEventListener("control", (e) => {
-      const action = e.detail;
+      const action = e.detail.action;
 
       if (action === "play") audio.play();
       if (action === "pause") audio.pause();
 
       if (action === "next") {
         currentIndex = (currentIndex + 1) % tracks.length;
-        const t = tracks[currentIndex];
-        this.loadTrack(t, audio, info);
+        loadCurrentTrack();
         audio.play();
       }
 
       if (action === "prev") {
         currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-        const t = tracks[currentIndex];
-        this.loadTrack(t, audio, info);
+        loadCurrentTrack();
         audio.play();
       }
-    });
-  }
 
-  // Cargar pista y actualizar info (incluye src para favorita)
-  loadTrack(track, audio, info) {
-    audio.src = track.src;
-    info.setInfo(track.titulo, track.artista, track.img, track.src);
+      if (action === "favorite") {
+        const current = tracks[currentIndex].src;
+        const saved = localStorage.getItem("favoriteSong");
+
+        if (saved === current) {
+          localStorage.removeItem("favoriteSong");
+        } else {
+          localStorage.setItem("favoriteSong", current);
+        }
+
+        updateFavoriteUI();
+      }
+    });
   }
 }
 

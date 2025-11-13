@@ -8,9 +8,10 @@ export class TrackList extends HTMLElement {
           padding: 10px;
           border-bottom: 1px solid #555;
           cursor: pointer;
-          transition: background 0.25s;
+          transition: 0.25s;
           color: white;
         }
+
         .track-item:hover {
           background: #333;
         }
