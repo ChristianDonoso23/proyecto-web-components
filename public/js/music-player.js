@@ -33,7 +33,9 @@ export class MusicPlayer extends HTMLElement {
 
     let currentIndex = 0;
 
-    // Lista de canciones con portadas individuales
+    // ============================================================
+    // 🔹 LISTA ÚNICA DE CANCIONES (locales)
+    // ============================================================
     const tracks = [
       { src: "./audio/cancion1.mp3", titulo: "Tema 1", artista: "Mi Artista Favorito", img: "./img/portada1.jpg" },
       { src: "./audio/cancion2.mp3", titulo: "Tema 2", artista: "Mi Artista Favorito", img: "./img/portada2.jpg" },
@@ -41,7 +43,7 @@ export class MusicPlayer extends HTMLElement {
     ];
 
     // ============================================================
-    // 🔹 Cargar datos desde LocalStorage si existen
+    // 🔹 Restaurar estado desde LocalStorage
     // ============================================================
     const savedData = JSON.parse(localStorage.getItem("playerState"));
 
@@ -62,19 +64,22 @@ export class MusicPlayer extends HTMLElement {
     }
 
     // ============================================================
-    // 🔹 Selección de canción desde track-list
+    // 🔹 Selección desde TrackList
     // ============================================================
     this.shadowRoot.addEventListener("trackSelected", (e) => {
       const { src, titulo, artista, img } = e.detail;
+
       audio.src = src;
-      audio.play();
       info.setInfo(titulo, artista, img);
+      audio.play();
+
       currentIndex = tracks.findIndex(t => t.src === src);
+
       saveState();
     });
 
     // ============================================================
-    // 🔹 Controles: play, pause, next, prev
+    // 🔹 Controles (play / pause / next / prev)
     // ============================================================
     this.shadowRoot.addEventListener("control", (e) => {
       const action = e.detail;
@@ -98,14 +103,14 @@ export class MusicPlayer extends HTMLElement {
     });
 
     // ============================================================
-    // 🔹 Guardar el tiempo de reproducción mientras avanza
+    // 🔹 Guardar progreso de reproducción
     // ============================================================
     audio.addEventListener("timeupdate", () => {
       saveState();
     });
 
     // ============================================================
-    // 🔹 Función interna para guardar el estado en LocalStorage
+    // 🔹 Guardar estado en LocalStorage
     // ============================================================
     function saveState() {
       const state = {
@@ -119,7 +124,7 @@ export class MusicPlayer extends HTMLElement {
   }
 
   // ============================================================
-  // 🔹 Cargar canción + actualizar portada
+  // 🔹 Cargar pista
   // ============================================================
   loadTrack(track, audio, info) {
     audio.src = track.src;

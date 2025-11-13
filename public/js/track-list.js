@@ -21,13 +21,15 @@ export class TrackList extends HTMLElement {
   }
 
   connectedCallback() {
+    // MISMA LISTA QUE EN music-player.js
     const canciones = [
-      { src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", titulo: "Tema 1", artista: "Mi Artista Favorito" },
-      { src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", titulo: "Tema 2", artista: "Mi Artista Favorito" },
-      { src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", titulo: "Tema 3", artista: "Mi Artista Favorito" },
+      { src: "./audio/cancion1.mp3", titulo: "Tema 1", artista: "Mi Artista Favorito", img: "./img/portada1.jpg" },
+      { src: "./audio/cancion2.mp3", titulo: "Tema 2", artista: "Mi Artista Favorito", img: "./img/portada2.jpg" },
+      { src: "./audio/cancion3.mp3", titulo: "Tema 3", artista: "Mi Artista Favorito", img: "./img/portada3.jpg" }
     ];
 
     const lista = this.shadowRoot.querySelector("#lista");
+
     canciones.forEach((c) => {
       const li = document.createElement("li");
       li.textContent = `${c.titulo} - ${c.artista}`;
