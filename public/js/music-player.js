@@ -23,11 +23,13 @@ export class MusicPlayer extends HTMLElement {
           flex: 1;
           min-width: 250px;
           text-align: center;
+          color: white;
         }
 
         .right-panel {
           flex: 1;
           min-width: 250px;
+          color: white;
         }
 
         audio {
@@ -54,71 +56,54 @@ export class MusicPlayer extends HTMLElement {
     const audio = this.shadowRoot.querySelector("#audio");
     const info = this.shadowRoot.querySelector("track-info");
 
-    let currentIndex = 0;
+    const base = window.location.origin;
 
-    // ============================================================
-    // 🔹 LISTA ÚNICA DE CANCIONES (locales)
-    // ============================================================
+    // Lista única de canciones (mismas rutas que en track-list.js)
     const tracks = [
       {
-        src: "/public/audio/MILO J - CARENCIAS DE CORDURA ft. Yami Safdie.mp3",
+        src: `${base}/public/audio/MILO J - CARENCIAS DE CORDURA ft. Yami Safdie.mp3`,
         titulo: "Carencias de Cordura",
         artista: "Milo J ft. Yami Safdie",
-        img: "/public/img/carencias_de_cordura.jpg",
+        img: `${base}/public/img/carencias_de_cordura.jpg`,
       },
       {
-        src: "/public/audio/MILO J - OLIMPO.mp3",
+        src: `${base}/public/audio/MILO J - OLIMPO.mp3`,
         titulo: "Olimpo",
         artista: "Milo J",
-        img: "/public/img/olimpo.jpg",
+        img: `${base}/public/img/olimpo.jpg`,
       },
       {
-        src: "/public/audio/Taiu, Milo J - Rara Vez.mp3",
+        src: `${base}/public/audio/Taiu, Milo J - Rara Vez.mp3`,
         titulo: "Rara Vez",
         artista: "Taiu, Milo J",
-        img: "/public/img/rara_vez.jpg",
+        img: `${base}/public/img/rara_vez.jpg`,
       },
     ];
 
-    // ============================================================
-    // 🔹 Restaurar estado desde LocalStorage
-    // ============================================================
-    const savedData = JSON.parse(localStorage.getItem("playerState"));
+    let currentIndex = 0;
 
-    if (savedData) {
-      const { trackSrc, time, isPlaying } = savedData;
-      const foundTrack = tracks.find((t) => t.src === trackSrc);
-
-      if (foundTrack) {
-        currentIndex = tracks.indexOf(foundTrack);
-        this.loadTrack(foundTrack, audio, info);
-        audio.currentTime = time || 0;
-        if (isPlaying) audio.play();
-      } else {
-        this.loadTrack(tracks[0], audio, info);
+    // 🔹 Si hay favorita en localStorage, la mostramos primero
+    const favoriteSrc = localStorage.getItem("favoriteSong");
+    if (favoriteSrc) {
+      const favTrack = tracks.find((t) => t.src === favoriteSrc);
+      if (favTrack) {
+        currentIndex = tracks.indexOf(favTrack);
       }
-    } else {
-      this.loadTrack(tracks[0], audio, info);
     }
 
-    // ============================================================
-    // 🔹 Selección desde TrackList
-    // ============================================================
+    // Cargar pista inicial (favorita o primera)
+    this.loadTrack(tracks[currentIndex], audio, info);
+
+    // 🔹 Al seleccionar desde la lista
     this.shadowRoot.addEventListener("trackSelected", (e) => {
-      const { src, titulo, artista, img } = e.detail;
+      const track = tracks.find((t) => t.src === e.detail.src) || e.detail;
 
-      audio.src = src;
-      info.setInfo(titulo, artista, img);
+      this.loadTrack(track, audio, info);
       audio.play();
-
-      currentIndex = tracks.findIndex((t) => t.src === src);
-
-      saveState();
+      currentIndex = tracks.indexOf(track);
     });
 
-    // ============================================================
-    // 🔹 Controles (play / pause / next / prev)
-    // ============================================================
+    // 🔹 Controles básicos (play / pause / next / prev)
     this.shadowRoot.addEventListener("control", (e) => {
       const action = e.detail;
 
@@ -127,46 +112,24 @@ export class MusicPlayer extends HTMLElement {
 
       if (action === "next") {
         currentIndex = (currentIndex + 1) % tracks.length;
-        this.loadTrack(tracks[currentIndex], audio, info);
+        const t = tracks[currentIndex];
+        this.loadTrack(t, audio, info);
         audio.play();
       }
 
       if (action === "prev") {
         currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-        this.loadTrack(tracks[currentIndex], audio, info);
+        const t = tracks[currentIndex];
+        this.loadTrack(t, audio, info);
         audio.play();
       }
-
-      saveState();
     });
-
-    // ============================================================
-    // 🔹 Guardar progreso de reproducción
-    // ============================================================
-    audio.addEventListener("timeupdate", () => {
-      saveState();
-    });
-
-    // ============================================================
-    // 🔹 Guardar estado en LocalStorage
-    // ============================================================
-    function saveState() {
-      const state = {
-        trackSrc: audio.src,
-        time: audio.currentTime,
-        isPlaying: !audio.paused,
-      };
-
-      localStorage.setItem("playerState", JSON.stringify(state));
-    }
   }
 
-  // ============================================================
-  // 🔹 Cargar pista
-  // ============================================================
+  // Cargar pista y actualizar info (incluye src para favorita)
   loadTrack(track, audio, info) {
     audio.src = track.src;
-    info.setInfo(track.titulo, track.artista, track.img);
+    info.setInfo(track.titulo, track.artista, track.img, track.src);
   }
 }
 
