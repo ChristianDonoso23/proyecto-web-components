@@ -52,7 +52,6 @@ export class PlayerProgress extends HTMLElement {
     this.currentLabel = this.shadowRoot.querySelector("#current");
     this.totalLabel = this.shadowRoot.querySelector("#total");
 
-    // Permite arrastrar la barra
     this.bar.addEventListener("click", (e) => {
       const rect = this.bar.getBoundingClientRect();
       const percent = (e.clientX - rect.left) / rect.width;
@@ -62,7 +61,6 @@ export class PlayerProgress extends HTMLElement {
     });
   }
 
-  // Método para actualizar la barra desde music-player.js
   update(current, total) {
     if (!total || total === Infinity) return;
 
