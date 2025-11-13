@@ -23,9 +23,24 @@ export class TrackList extends HTMLElement {
   connectedCallback() {
     // MISMA LISTA QUE EN music-player.js
     const canciones = [
-      { src: "./audio/cancion1.mp3", titulo: "Tema 1", artista: "Mi Artista Favorito", img: "./img/portada1.jpg" },
-      { src: "./audio/cancion2.mp3", titulo: "Tema 2", artista: "Mi Artista Favorito", img: "./img/portada2.jpg" },
-      { src: "./audio/cancion3.mp3", titulo: "Tema 3", artista: "Mi Artista Favorito", img: "./img/portada3.jpg" }
+      {
+        src: "/public/audio/MILO J - CARENCIAS DE CORDURA ft. Yami Safdie.mp3",
+        titulo: "Carencias de Cordura",
+        artista: "Milo J ft. Yami Safdie",
+        img: "./public/img/carencias_de_cordura.jpg",
+      },
+      {
+        src: "/public/audio/MILO J - OLIMPO.mp3",
+        titulo: "Olimpo",
+        artista: "Milo J",
+        img: "./public/img/olimpo.jpg",
+      },
+      {
+        src: "/public/audio/Taiu, Milo J - Rara Vez.mp3",
+        titulo: "Rara Vez",
+        artista: "Taiu, Milo J",
+        img: "/public/img/rara_vez.jpg",
+      },
     ];
 
     const lista = this.shadowRoot.querySelector("#lista");
@@ -34,7 +49,9 @@ export class TrackList extends HTMLElement {
       const li = document.createElement("li");
       li.textContent = `${c.titulo} - ${c.artista}`;
       li.addEventListener("click", () => {
-        this.dispatchEvent(new CustomEvent("trackSelected", { detail: c, bubbles: true }));
+        this.dispatchEvent(
+          new CustomEvent("trackSelected", { detail: c, bubbles: true })
+        );
       });
       lista.appendChild(li);
     });

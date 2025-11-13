@@ -9,22 +9,47 @@ export class MusicPlayer extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <link rel="stylesheet" href="./public/vendor/bootstrap/css/bootstrap.min.css" />
       <style>
-        .player-card {
+        .player-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 30px;
           background-color: #222;
+          padding: 30px;
           border-radius: 15px;
-          padding: 20px;
           box-shadow: 0 0 10px rgba(255,255,255,0.1);
         }
-        audio { width: 100%; margin-top: 10px; }
+
+        .left-panel {
+          flex: 1;
+          min-width: 250px;
+          text-align: center;
+        }
+
+        .right-panel {
+          flex: 1;
+          min-width: 250px;
+        }
+
+        audio {
+          width: 100%;
+          margin-top: 15px;
+        }
       </style>
 
-      <div class="player-card text-center">
-        <track-info></track-info>
-        <player-controls></player-controls>
-        <audio id="audio"></audio>
-        <track-list></track-list>
+      <div class="player-container">
+        <div class="left-panel">
+          <track-info></track-info>
+          <player-controls></player-controls>
+          <audio id="audio"></audio>
+        </div>
+
+        <div class="right-panel">
+          <track-list></track-list>
+        </div>
       </div>
     `;
+
+
   }
 
   connectedCallback() {
@@ -37,9 +62,24 @@ export class MusicPlayer extends HTMLElement {
     // 🔹 LISTA ÚNICA DE CANCIONES (locales)
     // ============================================================
     const tracks = [
-      { src: "./audio/cancion1.mp3", titulo: "Tema 1", artista: "Mi Artista Favorito", img: "./img/portada1.jpg" },
-      { src: "./audio/cancion2.mp3", titulo: "Tema 2", artista: "Mi Artista Favorito", img: "./img/portada2.jpg" },
-      { src: "./audio/cancion3.mp3", titulo: "Tema 3", artista: "Mi Artista Favorito", img: "./img/portada3.jpg" }
+      {
+        src: "/public/audio/MILO J - CARENCIAS DE CORDURA ft. Yami Safdie.mp3",
+        titulo: "Carencias de Cordura",
+        artista: "Milo J ft. Yami Safdie",
+        img: "/public/img/carencias_de_cordura.jpg",
+      },
+      {
+        src: "/public/audio/MILO J - OLIMPO.mp3",
+        titulo: "Olimpo",
+        artista: "Milo J",
+        img: "/public/img/olimpo.jpg",
+      },
+      {
+        src: "/public/audio/Taiu, Milo J - Rara Vez.mp3",
+        titulo: "Rara Vez",
+        artista: "Taiu, Milo J",
+        img: "/public/img/rara_vez.jpg",
+      },
     ];
 
     // ============================================================
@@ -49,7 +89,7 @@ export class MusicPlayer extends HTMLElement {
 
     if (savedData) {
       const { trackSrc, time, isPlaying } = savedData;
-      const foundTrack = tracks.find(t => t.src === trackSrc);
+      const foundTrack = tracks.find((t) => t.src === trackSrc);
 
       if (foundTrack) {
         currentIndex = tracks.indexOf(foundTrack);
@@ -73,7 +113,7 @@ export class MusicPlayer extends HTMLElement {
       info.setInfo(titulo, artista, img);
       audio.play();
 
-      currentIndex = tracks.findIndex(t => t.src === src);
+      currentIndex = tracks.findIndex((t) => t.src === src);
 
       saveState();
     });
@@ -116,7 +156,7 @@ export class MusicPlayer extends HTMLElement {
       const state = {
         trackSrc: audio.src,
         time: audio.currentTime,
-        isPlaying: !audio.paused
+        isPlaying: !audio.paused,
       };
 
       localStorage.setItem("playerState", JSON.stringify(state));

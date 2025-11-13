@@ -16,7 +16,7 @@ export class TrackInfo extends HTMLElement {
       </style>
 
       <div>
-        <img id="cover" src="./img/portada1.jpg" alt="Portada">
+        <img id="cover" src="./public/img/carencias_de_cordura.jpg" alt="Portada">
         <h5 id="titulo">Selecciona una canción</h5>
         <p id="artista"></p>
       </div>
