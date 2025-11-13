@@ -47,11 +47,13 @@ export class PlayerProgress extends HTMLElement {
   }
 
   connectedCallback() {
+    /* Elementos internos de la barra */
     this.bar = this.shadowRoot.querySelector("#bar");
     this.filled = this.shadowRoot.querySelector("#filled");
     this.currentLabel = this.shadowRoot.querySelector("#current");
     this.totalLabel = this.shadowRoot.querySelector("#total");
 
+    /* Manejo de eventos de clic para buscar */
     this.bar.addEventListener("click", (e) => {
       const rect = this.bar.getBoundingClientRect();
       const percent = (e.clientX - rect.left) / rect.width;
@@ -61,6 +63,7 @@ export class PlayerProgress extends HTMLElement {
     });
   }
 
+  /* Actualiza la barra de progreso */
   update(current, total) {
     if (!total || total === Infinity) return;
 
@@ -71,6 +74,7 @@ export class PlayerProgress extends HTMLElement {
     this.totalLabel.textContent = this.formatTime(total);
   }
 
+  /* Formatea segundos a mm:ss */
   formatTime(seconds) {
     const min = Math.floor(seconds / 60);
     let sec = Math.floor(seconds % 60);

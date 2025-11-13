@@ -59,11 +59,13 @@ export class MusicPlayer extends HTMLElement {
   }
 
   connectedCallback() {
+    /* Referencias a elementos del shadow DOM */
     const audio = this.shadowRoot.querySelector("#audio");
     const info = this.shadowRoot.querySelector("track-info");
     const controls = this.shadowRoot.querySelector("player-controls");
     const progress = this.shadowRoot.querySelector("player-progress");
 
+    /* Definición de la lista de canciones */
     const base = window.location.origin;
 
     const tracks = [
@@ -113,30 +115,38 @@ export class MusicPlayer extends HTMLElement {
 
     let currentIndex = 0;
 
+    /* Cargar canción favorita si existe */
     const favSrc = localStorage.getItem("favoriteSong");
     if (favSrc) {
       const favTrack = tracks.find(t => t.src === favSrc);
       if (favTrack) currentIndex = tracks.indexOf(favTrack);
     }
 
+    /* Carga inicial de la pista */
     loadCurrentTrack();
 
+    /* Cargar la pista actual */
     function loadCurrentTrack() {
       const track = tracks[currentIndex];
       audio.src = track.src;
+
+      /* Actualizar información de la pista */
       info.setInfo(track.titulo, track.artista, track.img);
       updateFavoriteUI();
 
+      /* Actualizar la barra de progreso */
       audio.onloadedmetadata = () => {
         progress.update(0, audio.duration);
       };
     }
 
+    /* Actualizar el estado de favorito */
     function updateFavoriteUI() {
       const fav = localStorage.getItem("favoriteSong");
       controls.setFavoriteState(fav === tracks[currentIndex].src);
     }
 
+    /* Cuando seleccionan una pista de la lista */
     this.shadowRoot.addEventListener("trackSelected", (e) => {
       const track = tracks.find((t) => t.src === e.detail.src);
       currentIndex = tracks.indexOf(track);
@@ -144,6 +154,7 @@ export class MusicPlayer extends HTMLElement {
       audio.play();
     });
 
+    /* Control de reproducción */
     this.shadowRoot.addEventListener("control", (e) => {
       const action = e.detail.action;
 
@@ -173,10 +184,12 @@ export class MusicPlayer extends HTMLElement {
       }
     });
 
+    /* Actualizar progreso de la pista */
     audio.addEventListener("timeupdate", () => {
       progress.update(audio.currentTime, audio.duration);
     });
 
+    /* Manejar búsqueda en la barra de progreso */
     progress.addEventListener("seek", (e) => {
       const percent = e.detail;
       audio.currentTime = percent * audio.duration;

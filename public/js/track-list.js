@@ -19,7 +19,7 @@ export class TrackList extends HTMLElement {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 10px 0;
+          padding: 10px;
           cursor: pointer;
           transition: 0.25s;
         }
@@ -53,7 +53,7 @@ export class TrackList extends HTMLElement {
       <h5 class="mt-3">Lista de Canciones</h5>
 
       <div class="header">
-        <span>#</span>
+        <span style="margin-left: 20px;">#</span>
         <span style="flex: 1; margin-left: 10px;">Título</span>
         <span>Duración</span>
       </div>
@@ -94,22 +94,23 @@ export class TrackList extends HTMLElement {
 
     const lista = this.shadowRoot.querySelector("#lista");
 
+    /* Generar filas */
     canciones.forEach((c, index) => {
       const row = document.createElement("div");
       row.className = "row";
 
-      // placeholder
       row.innerHTML = `
         <span class="num">${index + 1}</span>
         <span class="title">${c.titulo}</span>
         <span class="duration" id="d${index}">--:--</span>
       `;
 
-      // Duración real
+      /* Obtener duración */
       this.obtenerDuracion(c.src, (dur) => {
         this.shadowRoot.querySelector(`#d${index}`).textContent = dur;
       });
 
+      /* Evento de selección */
       row.addEventListener("click", () => {
         this.dispatchEvent(new CustomEvent("trackSelected", { detail: c, bubbles: true }));
       });
@@ -118,6 +119,7 @@ export class TrackList extends HTMLElement {
     });
   }
 
+  /* Función para obtener la duración de una pista */
   obtenerDuracion(src, callback) {
     const audio = new Audio(src);
 

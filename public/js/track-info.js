@@ -25,6 +25,7 @@ export class TrackInfo extends HTMLElement {
     `;
   }
 
+  /* Actualiza la información de la pista */
   setInfo(titulo, artista, img) {
     this.shadowRoot.querySelector("#titulo").textContent = titulo;
     this.shadowRoot.querySelector("#artista").textContent = artista;

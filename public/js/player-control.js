@@ -46,11 +46,13 @@ export class PlayerControls extends HTMLElement {
   }
 
   connectedCallback() {
+    /* Emite un evento personalizado al hacer clic en un botón */
     const emit = (action) =>
       this.dispatchEvent(
         new CustomEvent("control", { detail: { action }, bubbles: true })
       );
 
+    /* Asigna los manejadores de eventos a los botones */
     this.shadowRoot.getElementById("play").onclick = () => emit("play");
     this.shadowRoot.getElementById("pause").onclick = () => emit("pause");
     this.shadowRoot.getElementById("next").onclick = () => emit("next");
@@ -58,6 +60,7 @@ export class PlayerControls extends HTMLElement {
     this.shadowRoot.getElementById("fav").onclick = () => emit("favorite");
   }
 
+  /* Actualiza el estado del botón de favorito */
   setFavoriteState(isFav) {
     const favBtn = this.shadowRoot.querySelector("#fav");
     const icon = favBtn.querySelector("i");
