@@ -6,11 +6,11 @@ export class TrackInfo extends HTMLElement {
       <link rel="stylesheet" href="./public/vendor/bootstrap/css/bootstrap.min.css" />
       <style>
         img {
-          width: 200px;
-          height: 200px;
-          border-radius: 10px;
+          width: 250px;
+          height: 250px;
+          border-radius: 15px;
           object-fit: cover;
-          margin-bottom: 10px;
+          margin-bottom: 20px;
         }
         h5, p { margin: 0; }
       </style>

@@ -4,6 +4,7 @@ export class PlayerControls extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = `
       <link rel="stylesheet" href="./public/vendor/bootstrap/css/bootstrap.min.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
       <style>
         .controls {
           display: flex;
@@ -21,16 +22,17 @@ export class PlayerControls extends HTMLElement {
         }
         button:hover {
           transform: scale(1.1);
-          color: #ffc107;
+          color: #3cc31aff;
         }
       </style>
 
       <div class="controls">
-        <button id="prev">⏮️</button>
-        <button id="play">▶️</button>
-        <button id="pause">⏸️</button>
-        <button id="next">⏭️</button>
+        <button id="prev"><i class="bi bi-skip-start-fill"></i></button>
+        <button id="play"><i class="bi bi-play-fill"></i></button>
+        <button id="pause"><i class="bi bi-pause-fill"></i></button>
+        <button id="next"><i class="bi bi-skip-end-fill"></i></button>
       </div>
+
     `;
   }
 

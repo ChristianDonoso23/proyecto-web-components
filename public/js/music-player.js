@@ -48,8 +48,6 @@ export class MusicPlayer extends HTMLElement {
         </div>
       </div>
     `;
-
-
   }
 
   connectedCallback() {
