@@ -2,22 +2,61 @@ export class TrackList extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+
     this.shadowRoot.innerHTML = `
       <style>
-        .track-item {
-          padding: 10px;
-          border-bottom: 1px solid #555;
+        .header {
+          display: flex;
+          justify-content: space-between;
+          padding: 8px 0;
+          margin-bottom: 10px;
+          color: #bbb;
+          font-size: 0.9rem;
+          border-bottom: 1px solid #444;
+        }
+
+        .row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 0;
           cursor: pointer;
+          border-bottom: 1px solid #333;
           transition: 0.25s;
           color: white;
         }
 
-        .track-item:hover {
-          background: #333;
+        .row:hover {
+          background: #2a2a2a;
+        }
+
+        .num {
+          width: 30px;
+          text-align: center;
+          opacity: 0.7;
+        }
+
+        .title {
+          flex: 1;
+          margin-left: 10px;
+          font-weight: 500;
+        }
+
+        .duration {
+          width: 60px;
+          text-align: right;
+          opacity: 0.8;
         }
       </style>
 
       <h5 class="mt-3">Lista de Canciones</h5>
+
+      <div class="header">
+        <span>#</span>
+        <span style="flex: 1; margin-left: 10px;">Título</span>
+        <span>Duración</span>
+      </div>
+
       <div id="lista"></div>
     `;
   }
@@ -28,35 +67,64 @@ export class TrackList extends HTMLElement {
     const canciones = [
       {
         src: `${base}/public/audio/MILO J - CARENCIAS DE CORDURA ft. Yami Safdie.mp3`,
-        titulo: "Carencias de Cordura",
-        artista: "Milo J ft. Yami Safdie",
+        titulo: "Carencias de Cordura"
       },
       {
         src: `${base}/public/audio/MILO J - OLIMPO.mp3`,
-        titulo: "Olimpo",
-        artista: "Milo J",
+        titulo: "Olimpo"
       },
       {
         src: `${base}/public/audio/Taiu, Milo J - Rara Vez.mp3`,
-        titulo: "Rara Vez",
-        artista: "Taiu, Milo J",
+        titulo: "Rara Vez"
       },
+      {
+        src: `${base}/public/audio/Milo J - Ama de Mi Sol.mp3`,
+        titulo: "Ama de Mi Sol"
+      },
+      {
+        src: `${base}/public/audio/Milo J, Silvio Rodríguez - Luciérnagas.mp3`,
+        titulo: "Luciérnagas"
+      },
+      {
+        src: `${base}/public/audio/Milo J - Solifican12.mp3`,
+        titulo: "Solifican12"
+      }
     ];
 
     const lista = this.shadowRoot.querySelector("#lista");
 
-    canciones.forEach((c) => {
-      const item = document.createElement("div");
-      item.className = "track-item";
-      item.textContent = `${c.titulo} - ${c.artista}`;
+    canciones.forEach((c, index) => {
+      const row = document.createElement("div");
+      row.className = "row";
 
-      item.addEventListener("click", () => {
-        this.dispatchEvent(
-          new CustomEvent("trackSelected", { detail: c, bubbles: true })
-        );
+      // placeholder
+      row.innerHTML = `
+        <span class="num">${index + 1}</span>
+        <span class="title">${c.titulo}</span>
+        <span class="duration" id="d${index}">--:--</span>
+      `;
+
+      // Duración real
+      this.obtenerDuracion(c.src, (dur) => {
+        this.shadowRoot.querySelector(`#d${index}`).textContent = dur;
       });
 
-      lista.appendChild(item);
+      row.addEventListener("click", () => {
+        this.dispatchEvent(new CustomEvent("trackSelected", { detail: c, bubbles: true }));
+      });
+
+      lista.appendChild(row);
+    });
+  }
+
+  obtenerDuracion(src, callback) {
+    const audio = new Audio(src);
+
+    audio.addEventListener("loadedmetadata", () => {
+      let min = Math.floor(audio.duration / 60);
+      let sec = Math.floor(audio.duration % 60);
+      if (sec < 10) sec = "0" + sec;
+      callback(`${min}:${sec}`);
     });
   }
 }

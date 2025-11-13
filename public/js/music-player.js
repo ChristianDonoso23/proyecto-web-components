@@ -13,12 +13,15 @@ export class MusicPlayer extends HTMLElement {
         .player-container {
           display: flex;
           flex-wrap: wrap;
-          gap: 30px;
+          gap: 50px;
           background-color: #222;
-          padding: 30px;
+          padding: 50px 60px;
           border-radius: 15px;
           box-shadow: 0 0 10px rgba(255,255,255,0.1);
+          justify-content: center;  /* CENTRA TODO */
+          align-items: flex-start;  /* Alinea arriba */
         }
+
 
         .left-panel {
           flex: 1;
@@ -29,9 +32,10 @@ export class MusicPlayer extends HTMLElement {
 
         .right-panel {
           flex: 1;
-          min-width: 250px;
-          color: white;
+          min-width: 350px;
+          max-width: 500px;
         }
+
 
         audio {
           width: 100%;
@@ -79,6 +83,30 @@ export class MusicPlayer extends HTMLElement {
         artista: "Taiu, Milo J",
         img: `${base}/public/img/rara_vez.jpg`,
       },
+      {
+        src: `${base}/public/audio/Milo J - Ama de Mi Sol.mp3`,
+        titulo: "Ama de Mi Sol",
+        artista: "Milo J",
+        img: `${base}/public/img/la_vida_era_mas_corta.jpg`,
+      },
+      {
+        src: `${base}/public/audio/Milo J, Silvio Rodríguez - Luciérnagas.mp3`,
+        titulo: "Luciérnagas",
+        artista: "Milo J, Silvio Rodríguez",
+        img: `${base}/public/img/la_vida_era_mas_corta.jpg`,
+      },
+      {
+        src: `${base}/public/audio/Milo J - Solifican12.mp3`,
+        titulo: "Solifican12",
+        artista: "Milo J",
+        img: `${base}/public/img/la_vida_era_mas_corta.jpg`,
+      },
+      {
+        src: `${base}/public/audio/Milo J - Recordé.mp3`,
+        titulo: "Recordé",
+        artista: "Milo J",
+        img: `${base}/public/img/la_vida_era_mas_corta.jpg`,
+      }
     ];
 
     let currentIndex = 0;
