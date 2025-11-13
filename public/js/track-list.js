@@ -5,14 +5,22 @@ export class TrackList extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <link rel="stylesheet" href="./public/vendor/bootstrap/css/bootstrap.min.css" />
       <style>
-        ul { list-style: none; padding: 0; margin-top: 15px; }
+        ul { 
+          list-style: none; 
+          padding: 0; 
+          margin-top: 15px; 
+        }
+
         li {
           cursor: pointer;
           padding: 10px;
           border-bottom: 1px solid #555;
           transition: background 0.2s;
         }
-        li:hover { background-color: #333; }
+          
+        li:hover {
+          background-color: #333; 
+        }
       </style>
 
       <h5 class="mt-3">Lista de Canciones</h5>
